@@ -1,25 +1,29 @@
-class Viaje {
+class Actividad {
   const property idiomas = []
 
-  method esInteresante() = idiomas.size() > 1
-
+  method esInteresante() = self.idiomas().size() > 1
+  method idiomas() = idiomas
+  method cuantosDiasLleva()
+  method implicaEsfuerzo()
+  method sirveParaBroncearse()
   method esRecomendadaPara(unSocio) = self.esInteresante() && unSocio.leAtrae(self) && unSocio.noRealizo(self)
 }
 
-class ViajeDePlaya inherits Viaje{
+
+class ViajeDePlaya inherits Actividad {
   const largoDePlaya
 
-  method cuantosDiasLleva() = largoDePlaya / 500
-  method implicaEsfuerzo() = largoDePlaya > 1200
-  method sirveParaBroncearse() = true
+  override method cuantosDiasLleva() = (largoDePlaya / 500).roundUp()
+  override method implicaEsfuerzo() = largoDePlaya > 1200
+  override method sirveParaBroncearse() = true
 }
 
-class ExcursionEnLaCiudad inherits Viaje {
+class ExcursionEnLaCiudad inherits Actividad {
   const cantAtracciones
 
-  method cuantosDiasLleva() = cantAtracciones / 2
-  method implicaEsfuerzo() = cantAtracciones.between(5, 8)
-  method sirveParaBroncearse() = false
+  override method cuantosDiasLleva() = cantAtracciones.div(2)
+  override method implicaEsfuerzo() = cantAtracciones.between(5, 8)
+  override method sirveParaBroncearse() = false
   override method esInteresante() = super() || cantAtracciones == 5
 }
 
@@ -28,39 +32,37 @@ class ExcursionACiudadTropical inherits ExcursionEnLaCiudad {
   override method sirveParaBroncearse() = true
 }
 
-class SalidaDeTrekking inherits Viaje {
+class SalidaDeTrekking inherits Actividad {
   const cantKilometros
   const cantDiasDeSol
 
-  method cuantosDiasLleva() = cantKilometros / 50
-  method implicaEsfuerzo() = cantKilometros > 80
-  method sirveParaBroncearse() = cantDiasDeSol > 200 || (cantDiasDeSol.between(100, 200) && cantKilometros > 120)
+  override method cuantosDiasLleva() = cantKilometros / 50
+  override method implicaEsfuerzo() = cantKilometros > 80
+  override method sirveParaBroncearse() = cantDiasDeSol > 200 || (cantDiasDeSol.between(100, 200) && cantKilometros > 120)
   override method esInteresante() = super() && cantDiasDeSol > 140
 }
 
-class ClaseDeGimnasia {
-  const property idiomas = ["español"]
-
-  method cuantosDiasLleva() = 1
-  method implicaEsfuerzo() = true
-  method sirveParaBroncearse() = false
-  method esInteresante() = idiomas.size() > 1
-  method esRecomendadaPara(unSocio) = unSocio.edad().between(20, 30)
+class ClaseDeGimnasia inherits Actividad{
+  override method idiomas() = ["español"]
+  override method cuantosDiasLleva() = 1
+  override method implicaEsfuerzo() = true
+  override method sirveParaBroncearse() = false
+  override method esRecomendadaPara(unSocio) = unSocio.edad().between(20, 30)
 }
 
-class TallerLiterario {
+class TallerLiterario inherits Actividad {
   const libros = []
 
-  method idiomas() = libros.map({l => l.idioma()}).asSet()
-  method cuantosDiasLleva() = libros.size() + 1
+  override method idiomas() = libros.map({l => l.idioma()}).asSet()
+  override method cuantosDiasLleva() = libros.size() + 1
   method implicaEsfuerzoUnLibro() = libros.any({l => l.implicaEsfuerzo()})
   method sonTodosDelMismoAutor() = libros.all({l => l.autor() == libros.first().autor()})
-  method implicaEsfuerzo() = self.implicaEsfuerzoUnLibro() || (libros.size() > 1 && self.sonTodosDelMismoAutor())
-  method sireveParaBroncearse() = false
-  method esRecomendadaPara(unSocio) = unSocio.cantIdiomas() > 1
+  override method implicaEsfuerzo() = self.implicaEsfuerzoUnLibro() || (libros.size() > 1 && self.sonTodosDelMismoAutor())
+  override method sirveParaBroncearse() = false
+  override method esRecomendadaPara(unSocio) = unSocio.cantIdiomas() > 1
 }
 
-class Libros {
+class Libro {
   const property idioma
   const property autor
   const property cantPaginas

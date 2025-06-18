@@ -1,0 +1,140 @@
+import actividades.*
+import socios.*
+
+describe "Test de viajes" {
+    //Viajes
+    const viajePlayaLargo = new ViajeDePlaya(idiomas=["español", "portugués"], largoDePlaya=2500)
+    const viajePlayaCorto = new ViajeDePlaya(idiomas= ["italiano"], largoDePlaya=800)
+    const excursion4 = new ExcursionEnLaCiudad(idiomas=["francés", "alemán"], cantAtracciones=4)
+    const excursion5 = new ExcursionEnLaCiudad(idiomas=["idiomas"], cantAtracciones=5)
+    const excursionTropical = new ExcursionACiudadTropical(idiomas=["español", "quechua"], cantAtracciones=6)
+    const trekkingConSol = new SalidaDeTrekking(idiomas=["español", "inglés"], cantKilometros=100, cantDiasDeSol=250)
+    const trekkingConPocoSol = new SalidaDeTrekking(idiomas=["francés"], cantKilometros=150, cantDiasDeSol=120)
+    const claseGimnasia = new ClaseDeGimnasia()
+    const tallerComplejo = new TallerLiterario(libros=[libro1, libro2, libro3])
+    const tallerSimple = new TallerLiterario(libros=[libro2, libro4])
+
+    //Libros
+    const libro1 = new Libro(idioma="español", autor="Garcia Marquez", cantPaginas=600)
+    const libro2 = new Libro(idioma="ingles", autor="Garcia Marquez", cantPaginas=300)
+    const libro3 = new Libro(idioma="frances", autor="Borgues", cantPaginas=400)
+    const libro4 = new Libro(idioma="español", autor="Garcia Marquez", cantPaginas=120)
+
+    //Socios
+    const socio1 = new Socio(maximoActividades=3, idiomas=["español"], edad=17, actividades=[viajePlayaCorto, viajePlayaLargo])
+    const socio2 = new SocioTranquilo(maximoActividades=3, idiomas=["español"], edad=27)
+    const socio3 = new SocioCoherente(maximoActividades=4, idiomas=["español"], edad=15, actividades=[viajePlayaCorto, viajePlayaLargo])
+    const socio4 = new SocioCoherente(maximoActividades=4, idiomas=["ingles"], edad=25, actividades=[viajePlayaCorto, claseGimnasia])
+    const socio5 = new SocioRelajado(maximoActividades=4, idiomas=["ingles", "español"], edad=35)
+
+    test "El viaje de playa largo dura 5 días, implica esfuerzo, sirve para broncearse, y es interesante" {
+        assert.equals(5, viajePlayaLargo.cuantosDiasLleva())
+        assert.that(viajePlayaLargo.implicaEsfuerzo())
+        assert.that(viajePlayaLargo.sirveParaBroncearse())
+        assert.that(viajePlayaLargo.esInteresante())
+    }
+
+    test "El viaje de playa  corto dura 1 día, no implica esfuerzo, sirve para broncearse, y no es interesante" {
+        assert.equals(2, viajePlayaCorto.cuantosDiasLleva())
+        assert.notThat(viajePlayaCorto.implicaEsfuerzo())
+        assert.that(viajePlayaCorto.sirveParaBroncearse())
+        assert.notThat(viajePlayaCorto.esInteresante())
+    }
+
+    test "La excursion a la ciudad de 4 atracciones dura 2 días, no implica esfuerzo, no sirve para broncearse, y es interesante" {
+        assert.equals(2, excursion4.cuantosDiasLleva())
+        assert.notThat(excursion4.implicaEsfuerzo())
+        assert.notThat(excursion4.sirveParaBroncearse())
+        assert.that(excursion4.esInteresante())
+    }
+
+    test "La excursion a la ciudad de 5 atracciones dura 2 días, implica esfuerzo, no sirve para broncearse, y es interesante (por la regla especial de 5 atracciones" {
+        assert.equals(2, excursion5.cuantosDiasLleva())
+        assert.that(excursion5.implicaEsfuerzo())
+        assert.notThat(excursion5.sirveParaBroncearse())
+        assert.that(excursion5.esInteresante())
+    }
+
+    test "La excursion a la ciudad tropical  dura 4 días (3+1), implica esfuerzo, sirve para broncearse, y es interesante" {
+        assert.equals(4, excursionTropical.cuantosDiasLleva())
+        assert.that(excursionTropical.implicaEsfuerzo())
+        assert.that(excursionTropical.sirveParaBroncearse())
+        assert.that(excursionTropical.esInteresante())
+    }
+
+    test "El trekking con mucho sol  dura 2 días, implica esfuerzo, sirve para broncearse, y es interesante" {
+        assert.equals(2, trekkingConSol.cuantosDiasLleva())
+        assert.that(trekkingConSol.implicaEsfuerzo())
+        assert.that(trekkingConSol.sirveParaBroncearse())
+        assert.that(trekkingConSol.esInteresante())
+    }
+
+    test "El trekking con poco sol dura 3 días, implica esfuerzo, sirve para broncearse, y no es interesante (no cumple condición de días de sol >140" {
+        assert.equals(3, trekkingConPocoSol.cuantosDiasLleva())
+        assert.that(trekkingConPocoSol.implicaEsfuerzo())
+        assert.that(trekkingConPocoSol.sirveParaBroncearse())
+        assert.notThat(trekkingConPocoSol.esInteresante())
+    }
+
+    test "La clase de gimnasia dura 1 día, implica esfuerzo, no sirve para broncearse, no es interesante, y tiene idioma español" {
+        assert.equals(1, claseGimnasia.cuantosDiasLleva())
+        assert.that(claseGimnasia.implicaEsfuerzo())
+        assert.notThat(claseGimnasia.sirveParaBroncearse())
+        assert.notThat(claseGimnasia.esInteresante())
+    }
+
+    test "El taller literario complejo dura 4 días, implica esfuerzo (por libro >500 páginas), no sirve para broncearse, usa idiomas [español, inglés, francés] y no son del mismo autor" {
+        assert.equals(4, tallerComplejo.cuantosDiasLleva())
+        assert.that(tallerComplejo.implicaEsfuerzo())
+        assert.notThat(tallerComplejo.sirveParaBroncearse())
+        assert.equals(#{"ingles", "frances", "español"}, tallerComplejo.idiomas())
+        assert.that(tallerComplejo.esInteresante())
+        assert.notThat(tallerComplejo.sonTodosDelMismoAutor())
+    }
+
+    test "El taller literario simple lleva 3 dias, implica esfuerzo (por ser del mismo autor y >1 libro), no sirve para broncearse e idiomas [español, ingles]" {
+        assert.equals(3, tallerSimple.cuantosDiasLleva())
+        assert.that(tallerSimple.implicaEsfuerzo())
+        assert.notThat(tallerSimple.sirveParaBroncearse())
+        assert.equals(#{"ingles", "español"}, tallerSimple.idiomas())
+        assert.that(tallerSimple.esInteresante())
+        assert.that(tallerSimple.sonTodosDelMismoAutor())
+    }
+
+    test "El socio 1 es adorador del sol" {
+        assert.that(socio1.esAdoradorDelSol())
+    }
+
+    test "El socio 1 es adorador del sol, pero si hace la clase de gimansia ya no" {
+        socio1.realizarActividad(claseGimnasia)
+        assert.notThat(socio1.esAdoradorDelSol())
+    }
+
+    test "El socio 1  hace la clase de gimansia dos veces, pero la ultima llega a su limite" {
+        socio1.realizarActividad(claseGimnasia)
+        assert.throwsException({ socio1.realizarActividad(claseGimnasia) })
+    }
+
+    test " Al socio02 que es tranquilo le atrae viajeDePlayaLargo (de mas de 4 dias) y no viajeDePlayaCorto (de menos de 4 dias)" {
+        assert.that(socio2.leAtrae(viajePlayaLargo))
+        assert.notThat(socio2.leAtrae(viajePlayaCorto))
+    }
+
+    test "Al socio03 que es coherente le atraen actividades al sol, y no las que no sirven para broncearse" {
+        assert.that(socio3.leAtrae(viajePlayaLargo))
+        assert.that(socio3.leAtrae(viajePlayaCorto))
+        assert.notThat(socio3.leAtrae(claseGimnasia))
+    }
+
+    test "Al socio04 que es coherente no es adorador del sol,por lo que atraen la actividades de esfuerzo y no la sque sirven para broncearse" {
+        assert.that(socio4.leAtrae(claseGimnasia))
+        assert.notThat(socio4.leAtrae(viajePlayaCorto))
+    }
+
+    test "El socio 5 que es Relajado, le atrae viajeDePlayaLargo pero no el viajeDePlayaCorto o el trekkingConPocoSOl porque no se hablan los idiomas que habla el" {
+        assert.that(socio5.leAtrae(viajePlayaLargo))
+        assert.notThat(socio5.leAtrae(viajePlayaCorto))
+        assert.notThat(socio5.leAtrae(trekkingConPocoSol))
+    }
+
+}
