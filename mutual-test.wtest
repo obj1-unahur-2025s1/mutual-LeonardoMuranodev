@@ -112,7 +112,9 @@ describe "Test de viajes" {
 
     test "El socio 1  hace la clase de gimansia dos veces, pero la ultima llega a su limite" {
         socio1.realizarActividad(claseGimnasia)
-        assert.throwsException({ socio1.realizarActividad(claseGimnasia) })
+        //Comprueba el error y el mensaje el assert.throwsExceptionWithMessage:
+        assert.throwsExceptionWithMessage("El socio ya ha llegado a su maximo de actividades", { socio1.realizarActividad(claseGimnasia) })
+        //Comprueba el error:assert.throwsException({ socio1.realizarActividad(claseGimnasia) })
     }
 
     test " Al socio02 que es tranquilo le atrae viajeDePlayaLargo (de mas de 4 dias) y no viajeDePlayaCorto (de menos de 4 dias)" {
